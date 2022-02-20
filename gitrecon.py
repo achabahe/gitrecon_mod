@@ -39,6 +39,10 @@ def github_user_recon(username):
     github_user_keys = github_recon.obtain_keys(username)
     github_recon.extract_events_leaks(username)
     github_recon.validate_leaked_emails(github_recon.emails_list, github_user_info)
+    
+    github_repos = github_recon.obtain_repos(username)
+    github_recon.extract_repos_email_leaks(github_repos)
+    
     return github_user_info, github_user_keys
 
 
@@ -72,6 +76,8 @@ def print_github_results(user_data, keys):
     print('[bold red] [+] Updated at: [/bold red]' + str(user_data['updated_at']))
     for email in github_recon.valid_emails:
         print('[bold red] [+] Leaked email: [/bold red]' + email)
+    for email in github_recon.src_code_emails:
+        print('[bold red] [+] Leaked email from src code: [/bold red]' + email)
 
     if keys:
         console.rule('[bold blue]' + user_data['login'] + ' keys')
@@ -267,7 +273,7 @@ def download_github_avatar(url):
 
 
 if args.sites == 'github':
-    user_info, keys = github_user_recon(args.username)
+    user_info, keys,  = github_user_recon(args.username)
     print_github_results(user_info, keys)
     if args.output:
         json_data = create_github_json_output(user_info, keys)
