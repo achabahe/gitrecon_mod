@@ -114,7 +114,7 @@ def extract_repos_email_leaks(repos):
         git_log_out.wait()
         stdout, stderr = git_log_out.communicate()
         result = stdout.decode('utf8').strip().split('\n')
-        src_code_emails.append(result)
+        src_code_emails.extend(result)
     tmpdir.cleanup()
 
 def validate_leaked_emails(emails, user_info):
